@@ -1,9 +1,9 @@
-module CalcSpec where
+module CalcPartOneSpec where
 
 import Test.Hspec
 import Test.QuickCheck
 import Data.Char 
-import Calculator
+import CalculatorPartOne
 
 spec :: Spec
 spec = do

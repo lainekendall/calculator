@@ -1,9 +1,13 @@
 module Main where
 
 import CalculatorPartOne
+import Control.Monad (forever)
+import ParserModel
+import Evaluator
 
 main :: IO ()
-main = do
+main = forever $ do
+  putStrLn "Welcome to the Calculator! Part One..."
+  putStr "> "
   input <- getLine
-  --let x = runParse input undefined
-  return ()
+  print $ evaluate $ runParser parseExpression input
