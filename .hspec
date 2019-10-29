@@ -1,4 +1,4 @@
---format=progress
+--format=failed-examples
 --color
 --fail-fast
---diffs
+--diff

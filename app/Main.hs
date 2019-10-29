@@ -1,6 +1,6 @@
 module Main where
 
-import Calculator
+import CalculatorPartOne
 
 main :: IO ()
 main = do
