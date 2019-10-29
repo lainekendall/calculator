@@ -5,9 +5,6 @@ import Data.List
 import ParserModel
 import Evaluator
 
-runParse :: Show a => String -> Parser a -> Maybe a
-runParse xs p = fmap (\(a, _) -> a) $ (runParser p) xs
-
 parseExpression :: Parser AST
 parseExpression = do
   i1 <- parseValue 

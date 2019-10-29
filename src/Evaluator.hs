@@ -12,4 +12,4 @@ eval (Subtract a b) = eval a - eval b
 eval (Multiply a b) = eval a * eval b
 eval (Divide a b) = eval a `div` eval b
 
-data AST = Value Integer |  Add AST AST | Subtract AST AST | Multiply AST AST | Divide AST AST deriving Show
+data AST = Value Integer |  Add AST AST | Subtract AST AST | Multiply AST AST | Divide AST AST deriving (Show, Eq)

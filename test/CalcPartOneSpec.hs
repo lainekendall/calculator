@@ -4,11 +4,13 @@ import Test.Hspec
 import Test.QuickCheck
 import Data.Char 
 import CalculatorPartOne
+import ParserModel
+import Evaluator
 
 spec :: Spec
 spec = do
-  describe "Calculator" $ do
-    describe "isSpace" $ do
+  describe "CalculatorPartOne" $ do
+    describe "parseSpace" $ do
       it "Empty" $
        runParser parseSpace "" == Nothing
       it "space" $
@@ -17,21 +19,12 @@ spec = do
        runParser parseSpace "\n" == Just ((), "")
       it "space then words" $
        runParser parseSpace "          3 + 4    " == Just ((), "3 + 4    ")
-    describe "parseDigit" $ do
+    describe "parseValue" $ do
       it "Empty" $ do
-       runParser parseDigit "" == Nothing
+       runParser parseValue "" == Nothing
       it "space " $ do
-       runParser parseDigit " " == Nothing
+       runParser parseValue " " == Nothing
       it "word" $ do
-       runParser parseDigit "hello" == Nothing
+       runParser parseValue "hello" == Nothing
       it "345  " $ do
-       runParser parseDigit "345  " == Just (3, "45  ")
-    describe "parseInteger" $ do
-      it "Empty" $ do
-       runParser parseInteger "" == Nothing
-      it "space " $ do
-       runParser parseInteger " " == Nothing
-      it "word" $ do
-       runParser parseInteger "hello" == Nothing
-      it "345  " $ do
-       runParser parseInteger "345  " == Just (3, "45  ")
+       runParser parseValue "345  " == Just (Value 345, "  ")
