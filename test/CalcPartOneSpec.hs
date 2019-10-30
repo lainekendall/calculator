@@ -48,23 +48,16 @@ spec = do
        runParser parseFullExpression " " == Nothing
       it "incomplete" $ do
        runParser parseFullExpression "1 +   " == Nothing
-      it "parses an expression but doesn't trim spaces off end" $ do
-       runParser parseFullExpression "1 -  2    " == Just (MkAST Subtract ( Value 1) (Value 2), "")
-      it "cannot parse multiple expressions" $ do
-       runParser parseFullExpression "1   + 2 - 4" == Just (MkAST Add ( Value 1) (Value 2), "- 4")
-      it "fails with leading whitespace" $ do
-       runParser parseFullExpression "   1 * 2 - 4" == Just (MkAST Multiply ( Value 1) (Value 2), "- 4")
+      it "cannot parse a single value" $ do
+       runParser parseFullExpression "1" == Nothing
     describe "parseExpression" $ do
       it "Empty" $ do
        runParser parseExpression "" == Nothing
       it "space" $ do
        runParser parseExpression " " == Nothing
-      it "incomplete" $ do
+      it "parses a value of an incomplete expr" $ do
        runParser parseExpression "1 +   " == Just (Value 1, " +   ")
-      it "parses an expression but doesn't trim spaces off end" $ do
-       runParser parseExpression "1 -  2    " == Just (MkAST Subtract ( Value 1) (Value 2), "")
-      it "cannot parse multiple expressions" $ do
-       runParser parseExpression "1   + 2 - 4" == Just (MkAST Add ( Value 1) (Value 2), "- 4")
-      it "fails with leading whitespace" $ do
-       runParser parseExpression "   1 * 2 - 4" == Just (MkAST Multiply ( Value 1) (Value 2), "- 4")
-
+      it "trims all excess white space" $ do
+       runParser parseExpression "   1   -  2    " == Just (MkAST Subtract ( Value 1) (Value 2), "")
+      it "parses multiple expressions" $ do
+       runParser parseExpression "1 + 2 * 10 / 7" == Just (MkAST Add (Value 1) (MkAST Multiply (Value 2) (MkAST Divide (Value 10) (Value 7))),"")
