@@ -23,3 +23,9 @@ instance Monad Parser where
   (>>=) (Parser pa) aToPb = Parser $ \s -> case pa s of
     Nothing -> Nothing
     Just (a, s1) -> runParser (aToPb a) s1
+
+(<|>) :: Parser a -> Parser a -> Parser a
+(<|>) (Parser p) (Parser p1) = 
+  Parser $ \s -> case p s of
+    Nothing -> p1 s
+    x -> x

@@ -6,13 +6,18 @@ import ParserModel
 import Evaluator
 
 parseExpression :: Parser AST
-parseExpression = do
+parseExpression = parseFullExpression <|> parseValue
+
+parseFullExpression :: Parser AST
+parseFullExpression = do
+  parseSpace
   i1 <- parseValue 
   parseSpace
   op <- parseOperator
   parseSpace
-  i2 <- parseValue
-  return $ op i1 i2
+  i2 <- parseExpression
+  parseSpace
+  return $ MkAST op i1 i2
 
 parseValue :: Parser AST
 parseValue = Parser f
@@ -25,10 +30,9 @@ parseValue = Parser f
 parseSpace :: Parser ()
 parseSpace = Parser f
   where 
-    f "" = Nothing
     f s = Just ((), dropWhile isSpace s)
 
-parseOperator :: Parser (AST -> AST -> AST)
+parseOperator :: Parser Operator
 parseOperator = Parser f
   where
     f "" = Nothing
@@ -37,3 +41,4 @@ parseOperator = Parser f
                  '-' -> Just ( Subtract, cs)
                  '*' -> Just ( Multiply, cs)
                  '/' -> Just ( Divide, cs)
+                 _   -> Nothing

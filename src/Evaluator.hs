@@ -1,4 +1,9 @@
+{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE FlexibleInstances #-}
+
 module Evaluator where
+
+import ParserModel
 
 evaluate :: Maybe (AST, String) -> Integer
 evaluate Nothing = error "Error!"
@@ -7,9 +12,14 @@ evaluate (Just (a, s1)) = error $ "Didn't finish parsing. So far: " ++ show a ++
 
 eval :: AST -> Integer
 eval (Value i) = i
-eval (Add a b) = eval a + eval b
-eval (Subtract a b) = eval a - eval b
-eval (Multiply a b) = eval a * eval b
-eval (Divide a b) = eval a `div` eval b
+eval (MkAST Add a b) = eval a + eval b
+eval (MkAST Subtract a b) = eval a - eval b
+eval (MkAST Multiply a b) = eval a * eval b
+eval (MkAST Divide a b) = eval a `div` eval b
 
-data AST = Value Integer |  Add AST AST | Subtract AST AST | Multiply AST AST | Divide AST AST deriving (Show, Eq)
+repeatParsers :: Parser AST -> Parser AST
+repeatParsers pa = undefined 
+
+data AST = Value Integer | MkAST Operator AST AST deriving (Show, Eq)
+
+data Operator = Add | Subtract | Multiply | Divide deriving (Show, Eq)
