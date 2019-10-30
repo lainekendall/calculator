@@ -17,9 +17,6 @@ eval (MkAST Subtract a b) = eval a - eval b
 eval (MkAST Multiply a b) = eval a * eval b
 eval (MkAST Divide a b) = eval a `div` eval b
 
-repeatParsers :: Parser AST -> Parser AST
-repeatParsers pa = undefined 
-
 data AST = Value Integer | MkAST Operator AST AST deriving (Show, Eq)
 
 data Operator = Add | Subtract | Multiply | Divide deriving (Show, Eq)
