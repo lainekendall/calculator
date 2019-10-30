@@ -11,7 +11,7 @@ parseExpression = parseFullExpression <|> parseValue
 parseFullExpression :: Parser AST
 parseFullExpression = do
   parseSpace
-  i1 <- parseValue 
+  i1 <- parseValue
   parseSpace
   op <- parseOperator
   parseSpace
@@ -23,13 +23,13 @@ parseValue :: Parser AST
 parseValue = Parser f
   where
     f "" = Nothing
-    f s@(c:cs) = if isDigit c 
+    f s@(c:cs) = if isDigit c
                  then Just (Value $ read $ takeWhile isDigit s, dropWhile isDigit s)
                  else Nothing
 
 parseSpace :: Parser ()
 parseSpace = Parser f
-  where 
+  where
     f s = Just ((), dropWhile isSpace s)
 
 parseOperator :: Parser Operator

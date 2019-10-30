@@ -2,14 +2,14 @@ module CalcPartTwoSpec where
 
 import Test.Hspec
 import Test.QuickCheck
-import Data.Char 
+import Data.Char
 import CalculatorPartTwo
 import ParserModel
 import Evaluator
 
 spec :: Spec
-spec = do
+spec =
   describe "CalculatorPartOne" $ do
-    describe "parseSpace" $ do
-      it "Empty" $
-       True == True
+  describe "parseSpace" $ do
+    it "Empty" $
+     True == True

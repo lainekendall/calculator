@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Run Hlint Apply Refactor over all files in project
+
+find app/ -name "*.hs" -exec hlint {} --refactor --refactor-options="--inplace"  \;
+find src/ -name "*.hs" -exec hlint {} --refactor --refactor-options="--inplace"  \;
+find test/ -name "*.hs" -exec hlint {} --refactor --refactor-options="--inplace"  \;
