@@ -1,5 +1,6 @@
 module CalcPartOneSpec where
 
+import Data.Maybe (isNothing)
 import Test.Hspec
 import Test.QuickCheck
 import Data.Char
@@ -20,44 +21,44 @@ spec =
     it "space then words" $
      runParser parseSpace "          3 + 4    " == Just ((), "3 + 4    ")
   describe "parseValue" $ do
-    it "Empty" $ do
-     runParser parseValue "" == Nothing
-    it "space " $ do
-     runParser parseValue " " == Nothing
-    it "word" $ do
-     runParser parseValue "hello" == Nothing
-    it "345  " $ do
+    it "Empty" $
+     isNothing $ runParser parseValue ""
+    it "space " $
+     isNothing $ runParser parseValue " "
+    it "word" $
+     isNothing $ runParser parseValue "hello"
+    it "345  " $
      runParser parseValue "345  " == Just (Value 345, "  ")
-    it "  345  " $ do
-     runParser parseValue "  345  " == Nothing
+    it "  345  " $
+     isNothing $ runParser parseValue "  345  "
   describe "parseOperator" $ do
-    it "Empty" $ do
-     runParser parseOperator "" == Nothing
-    it "space " $ do
-     runParser parseOperator " " == Nothing
-    it "word" $ do
-     runParser parseOperator "hello" == Nothing
-    it "number" $ do
-     runParser parseOperator "345" == Nothing
-    it "+" $ do
+    it "Empty" $
+     isNothing $ runParser parseOperator ""
+    it "space " $
+     isNothing $ runParser parseOperator " "
+    it "word" $
+     isNothing $ runParser parseOperator "hello"
+    it "number" $
+     isNothing $ runParser parseOperator "345"
+    it "+" $
      runParser parseOperator "+" == Just (Add, "")
   describe "parseFullExpression" $ do
-    it "Empty" $ do
-     runParser parseFullExpression "" == Nothing
-    it "space" $ do
-     runParser parseFullExpression " " == Nothing
-    it "incomplete" $ do
-     runParser parseFullExpression "1 +   " == Nothing
-    it "cannot parse a single value" $ do
-     runParser parseFullExpression "1" == Nothing
+    it "Empty" $
+     isNothing $ runParser parseFullExpression ""
+    it "space" $
+     isNothing $ runParser parseFullExpression " "
+    it "incomplete" $
+     isNothing $ runParser parseFullExpression "1 +   "
+    it "cannot parse a single value" $
+     isNothing $ runParser parseFullExpression "1"
   describe "parseExpression" $ do
-    it "Empty" $ do
-     runParser parseExpression "" == Nothing
-    it "space" $ do
-     runParser parseExpression " " == Nothing
-    it "parses a value of an incomplete expr" $ do
+    it "Empty" $
+     isNothing $ runParser parseExpression ""
+    it "space" $
+     isNothing $ runParser parseExpression " "
+    it "parses a value of an incomplete expr" $
      runParser parseExpression "1 +   " == Just (Value 1, " +   ")
-    it "trims all excess white space" $ do
+    it "trims all excess white space" $
      runParser parseExpression "   1   -  2    " == Just (MkAST Subtract ( Value 1) (Value 2), "")
-    it "parses multiple expressions" $ do
+    it "parses multiple expressions" $
      runParser parseExpression "1 + 2 * 10 / 7" == Just (MkAST Add (Value 1) (MkAST Multiply (Value 2) (MkAST Divide (Value 10) (Value 7))),"")
