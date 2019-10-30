@@ -5,10 +5,10 @@ module Evaluator where
 
 import ParserModel
 
-evaluate :: Maybe (AST, String) -> Integer
-evaluate Nothing = error "Error!"
-evaluate (Just (a, "")) = eval a
-evaluate (Just (a, s1)) = error $ "Didn't finish parsing. So far: " ++ show a ++ ". Still left: " ++ s1 
+evaluate :: Maybe (AST, String) -> String
+evaluate Nothing = "Error!"
+evaluate (Just (a, "")) = show . eval $ a
+evaluate (Just (a, s1)) = "Didn't finish parsing. So far: " ++ show a ++ ". Still left: " ++ s1 
 
 eval :: AST -> Integer
 eval (Value i) = i
