@@ -4,10 +4,8 @@ module CalculatorPartTwo where
 
 import Data.Char
 import Data.List
-
 --runParse :: Show a => String -> Parser a -> Maybe a
 --runParse xs p = fmap (\(a, _) -> a) $ (runParser p) xs
-
 --readUserInput :: IO String
 --readUserInput = undefined
 --
