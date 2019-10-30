@@ -1,5 +1,8 @@
 # calculator
 
+## Calculator Part One
+
+To use the calculator run `stack run` after building the project with `stack build` and enter in executable expressions into the calculator like "2 * 18" 
 ### Developing
 
 ##### Set Up

@@ -7,10 +7,10 @@ import ParserModel
 import System.IO (BufferMode(NoBuffering), hSetBuffering, stdout)
 
 main :: IO ()
-main =
+main = do
+  hSetBuffering stdout NoBuffering
+  putStrLn "Welcome to the Calculator! Part One..."
   forever $ do
-    hSetBuffering stdout NoBuffering
-    putStrLn "Welcome to the Calculator! Part One..."
     putStr "> "
     input <- getLine
     print $ evaluate $ runParser parseExpression input
