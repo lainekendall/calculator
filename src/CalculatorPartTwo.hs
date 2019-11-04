@@ -4,78 +4,58 @@ module CalculatorPartTwo where
 
 import Data.Char
 import Data.List
+import ParserModel
+import Evaluator
+
 --runParse :: Show a => String -> Parser a -> Maybe a
 --runParse xs p = fmap (\(a, _) -> a) $ (runParser p) xs
 --readUserInput :: IO String
 --readUserInput = undefined
---
---parseExpression :: Parser AST
---parseExpression = do
---  i1 <- parseValue 
---  parseSpace
---  op <- parseOperator
---  parseSpace
---  i2 <- parseValue
---  return $ op i1 i2
---
---parsery :: Parser (Char, Char)
---parsery = parseChar >>= \c -> parseChar >>= \c2 -> pure (c, c2)
---
---many :: Parser a -> Parser [a]
---many f = some f <|> (return [])
---
---some :: Parser a -> Parser [a]
---some f = do
---  x <- f
---  xs <- many f
---  return $ x : xs
---
---satisfy :: (Char -> Bool) -> Parser Char
---satisfy f = parseChar >>= \c -> if f c then return c else Parser $ \s -> Nothing
---
---(<|>) :: Parser a -> Parser a -> Parser a
---(<|>) (Parser p) (Parser p1) = Parser $ \s -> case p s of
---  Nothing -> p1 s
---  x -> x
---
---combine :: Parser a -> Parser a -> Parser [a]
---combine p p1 = p >>= \a -> p1 >>= \a1 -> pure $ a : [a1]
---
---parseChar :: Parser Char
---parseChar = Parser f
---  where
---    f "" = Nothing
---    f (c:cs) = Just (c, cs)
---
---parseNumber' :: Parser Integer
---parseNumber' = fmap read $ many $ satisfy isDigit
---
---parseNumber :: Parser Integer
---parseNumber = Parser f
---  where
---    f "" = Nothing
---    f s@(c:cs) = if isDigit c 
---                 then Just (read $ takeWhile isDigit s, dropWhile isDigit s)
---                 else Nothing
---
---parseValue :: Parser AST
---parseValue = fmap Value parseNumber
---
---parseSpace' :: Parser [Char] -- ??
---parseSpace' = some $ satisfy isSpace
---
---parseSpace :: Parser ()
---parseSpace = Parser f
---  where 
---    f "" = Nothing
---    f s = Just ((), dropWhile isSpace s)
---
---char :: Char -> Parser Char
---char c = undefined
---
---string :: String -> Parser String
---string xs = undefined -- comes from char
---
+
+-- https://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Applicative.html#t:Alternative
+
+many :: Parser a -> Parser [a]
+many f = some f <|> return []
+
+some :: Parser a -> Parser [a]
+some f = do 
+  x <- f
+  xs <- many f
+  return $ x : xs
+
+-- http://dev.stephendiehl.com/fun/002_parsers.html
+-- https://hackage.haskell.org/package/base-4.12.0.0/docs/Text-ParserCombinators-ReadP.html#v:satisfy
+
+satisfy :: (Char -> Bool) -> Parser Char
+satisfy f = parseChar >>= \c -> if f c
+                                then return c
+                                else Parser $ const Nothing
+
+parseChar :: Parser Char
+parseChar = Parser f
+  where
+    f "" = Nothing
+    f (c:cs) = Just (c, cs)
+
+parseNumber :: Parser Integer
+parseNumber = fmap read $ many $ satisfy isDigit
+
+parseValue :: Parser AST
+parseValue = fmap Value parseNumber
+
+parseSpace :: Parser String
+parseSpace = many $ satisfy isSpace
+
+char :: Char -> Parser Char
+char c = satisfy (==c)
+
+string :: String -> Parser String
+string "" = return ""
+string (c:cs) = do
+  c1 <- char c
+  cs1 <- string cs
+  return $ c1 : cs1
+
 --parseOperator :: Parser (AST -> AST -> AST)
 --parseOperator = Parser f
 --  where
