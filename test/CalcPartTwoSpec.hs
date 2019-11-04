@@ -12,7 +12,7 @@ spec :: Spec
 spec =
   describe "CalculatorPartOne" $ do
     describe "parseChar" $ do
-      it "Empty" $ do 
+      it "Empty" $
         isNothing $ runParser parseChar ""
       it "parses a char correctly" $ runParser parseChar "c" == Just ('c', "")
       it "only parses one char and leaves the rest" $ runParser parseChar "cab" == Just ('c', "ab")

@@ -18,7 +18,7 @@ many :: Parser a -> Parser [a]
 many f = some f <|> return []
 
 some :: Parser a -> Parser [a]
-some f = do 
+some f = do
   x <- f
   xs <- many f
   return $ x : xs
