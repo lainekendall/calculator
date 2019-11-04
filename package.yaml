@@ -37,12 +37,13 @@ executables:
 
 tests:
   calculator-hspec-test:
-    main:                Spec.hs
+    main:                Blah.hs
     source-dirs:         test
     ghc-options:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -main-is Blah
     dependencies:
     - calculator
     - hlint
