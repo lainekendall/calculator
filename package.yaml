@@ -36,7 +36,6 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - calculator
-    - containers 
 
 tests:
   calculator-hspec-test:
@@ -50,8 +49,8 @@ tests:
     dependencies:
     - calculator
     - hspec
-    - hlint-test
     - QuickCheck
+    - hlint-test
   calculator-hlint-test:
     main:                Main.hs
     source-dirs:         test
@@ -61,7 +60,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - calculator
+    - hspec
+    - QuickCheck
     - hlint
     - hlint-test
-    - QuickCheck
-    - hspec

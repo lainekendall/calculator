@@ -1,5 +1,5 @@
 .stack-work/
 calculator.cabal
 *~
-dist
+dist*
 *.swp
