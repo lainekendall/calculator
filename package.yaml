@@ -20,6 +20,8 @@ extra-source-files:
 
 dependencies:
 - base >= 4.7 && < 5
+- containers
+- haskeline
 
 library:
   source-dirs: src
@@ -34,6 +36,7 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - calculator
+    - containers 
 
 tests:
   calculator-hspec-test:
@@ -46,9 +49,8 @@ tests:
     - -main-is Spec
     dependencies:
     - calculator
-    - hlint
-    - hlint-test
     - hspec
+    - hlint-test
     - QuickCheck
   calculator-hlint-test:
     main:                Main.hs
@@ -61,5 +63,5 @@ tests:
     - calculator
     - hlint
     - hlint-test
-    - hspec
     - QuickCheck
+    - hspec
