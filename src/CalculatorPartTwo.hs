@@ -10,7 +10,26 @@ import ParserModel
 import Evaluator
 
 parseExpression :: Parser AST
-parseExpression = undefined
+parseExpression = parseFullValue <|> parseFullExpression
+
+parseFullValue :: Parser AST
+parseFullValue = parseValueSurroundingSpaces >>= \v -> parseEof >> return v 
+
+parseFullExpression :: Parser AST
+parseFullExpression = do
+  v <- parseValueSurroundingSpaces
+  op <- parseOperator
+  parseSpace
+  fmap (MkAST op v) parseExpression
+
+parseValueSurroundingSpaces :: Parser AST
+parseValueSurroundingSpaces = parseSpace >> parseValue >>= \v -> parseSpace >> return v
+
+parseEof :: Parser ()
+parseEof = Parser f
+  where
+    f "" = Just ((), "")
+    f s = Nothing
 
 operatorsMap :: Map.Map Char Operator
 operatorsMap = Map.fromList [('+', Add),

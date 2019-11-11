@@ -9,7 +9,7 @@ spec =
     it "errors on Nothing" $ E.evaluate Nothing == "Error!"
     it "errors when it can't finish" $
       E.evaluate (Just (E.Value 1, "the rest")) ==
-      "Didn't finish parsing. So far: E.Value 1. Still left: the rest"
+      "Didn't finish parsing. So far: Value 1. Still left: the rest"
     it "correctly E.evaluates expressions" $
       E.evaluate
         (Just
