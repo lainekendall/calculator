@@ -2,6 +2,8 @@
 
 module ParserModel where
 
+import Control.Applicative (Alternative, empty, (<|>))
+
 newtype Parser a =
   Parser
     { runParser :: String -> Maybe (a, String)
@@ -33,9 +35,12 @@ instance Monad Parser where
         Nothing -> Nothing
         Just (a, s1) -> runParser (aToPb a) s1
 
-(<|>) :: Parser a -> Parser a -> Parser a
-(<|>) (Parser p) (Parser p1) =
-  Parser $ \s ->
-    case p s of
-      Nothing -> p1 s
-      x -> x
+instance Alternative Parser where
+  empty :: Parser a
+  empty = Parser $ const Nothing
+  (<|>) :: Parser a -> Parser a -> Parser a
+  (<|>) (Parser p) (Parser p1) =
+    Parser $ \s ->
+      case p s of
+        Nothing -> p1 s
+        x -> x

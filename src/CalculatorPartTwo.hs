@@ -1,35 +1,26 @@
 {-# LANGUAGE InstanceSigs #-}
-{-# LANGUAGE LambdaCase #-}
 
 module CalculatorPartTwo where
 
+import Control.Applicative ((<|>))
 import Data.Char
 import Data.List
 import qualified Data.Map as Map
 import ParserModel
+import ParserCombinators
 import Evaluator
 
 parseExpression :: Parser AST
 parseExpression = parseFullValue <|> parseFullExpression
 
 parseFullValue :: Parser AST
-parseFullValue = parseValueSurroundingSpaces >>= \v -> parseEof >> return v
+parseFullValue = parseValue <* parseEof
 
 parseFullExpression :: Parser AST
 parseFullExpression = do
-  v <- parseValueSurroundingSpaces
+  v <- parseValue
   op <- parseOperator
-  parseSpace
   fmap (MkAST op v) parseExpression
-
-parseValueSurroundingSpaces :: Parser AST
-parseValueSurroundingSpaces = parseSpace >> parseValue >>= \v -> parseSpace >> return v
-
-parseEof :: Parser ()
-parseEof = Parser f
-  where
-    f "" = Just ((), "")
-    f s = Nothing
 
 operatorsMap :: Map.Map Char Operator
 operatorsMap = Map.fromList [('+', Add),
@@ -37,56 +28,8 @@ operatorsMap = Map.fromList [('+', Add),
   ('*', Multiply),
   ('/', Divide)]
 
--- https://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Applicative.html#t:Alternative
-many :: Parser a -> Parser [a]
-many f = some f <|> return []
-
-some :: Parser a -> Parser [a]
-some f = do
-  x <- f
-  xs <- many f
-  return $ x : xs
-
--- http://dev.stephendiehl.com/fun/002_parsers.html
--- https://hackage.haskell.org/package/base-4.12.0.0/docs/Text-ParserCombinators-ReadP.html#v:satisfy
-
-satisfy :: (Char -> Bool) -> Parser Char
-satisfy f = parseChar >>= \c -> if f c
-                                then return c
-                                else Parser $ const Nothing
-
-char :: Char -> Parser Char
-char c = satisfy (==c)
-
-string :: String -> Parser String
-string "" = return ""
-string (c:cs) = do
-  c1 <- char c
-  cs1 <- string cs
-  return $ c1 : cs1
-
-parseChar :: Parser Char
-parseChar = Parser f
-  where
-    f "" = Nothing
-    f (c:cs) = Just (c, cs)
-
-parseNumber :: Parser Integer
-parseNumber = fmap read $ some $ satisfy isDigit
-
 parseValue :: Parser AST
-parseValue = fmap Value parseNumber
-
-parseSpace :: Parser String
-parseSpace = many $ satisfy isSpace
-
-parseMaybeOperator :: Parser (Maybe Operator)
-parseMaybeOperator = fmap (`Map.lookup` operatorsMap) parseChar
+parseValue = ignoreWhitespace $ fmap Value parseNumber
 
 parseOperator :: Parser Operator
-parseOperator = parseMaybeOperator >>= \case
-                                   Nothing -> Parser $ const Nothing
-                                   Just op -> return op
-choice :: [Parser a] -> Parser a
-choice [pa] = pa
-choice (pa:pas) = pa <|> choice pas
+parseOperator = ignoreWhitespace $ unwrapMaybe $ fmap (`Map.lookup` operatorsMap) parseChar

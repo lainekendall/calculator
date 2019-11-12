@@ -5,6 +5,7 @@ import Data.Char
 import Data.Maybe (isNothing)
 import Evaluator
 import ParserModel
+import ParserCombinators
 import Test.Hspec
 import Test.QuickCheck
 

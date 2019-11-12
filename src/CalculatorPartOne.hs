@@ -1,5 +1,6 @@
 module CalculatorPartOne where
 
+import Control.Applicative
 import Data.Char
 import Data.List
 import Evaluator
