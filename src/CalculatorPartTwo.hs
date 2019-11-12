@@ -13,7 +13,7 @@ parseExpression :: Parser AST
 parseExpression = parseFullValue <|> parseFullExpression
 
 parseFullValue :: Parser AST
-parseFullValue = parseValueSurroundingSpaces >>= \v -> parseEof >> return v 
+parseFullValue = parseValueSurroundingSpaces >>= \v -> parseEof >> return v
 
 parseFullExpression :: Parser AST
 parseFullExpression = do

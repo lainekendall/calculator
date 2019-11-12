@@ -15,8 +15,7 @@ parseFullExpression :: Parser AST
 parseFullExpression = do
   i1 <- parseInteger
   op <- parseOp
-  i2 <- parseExpression
-  return $ MkAST op i1 i2
+  MkAST op i1 <$> parseExpression
 
 parseInteger :: Parser AST
 parseInteger = fmap Value (ignoreWhitespace $ fmap read (many1 digit))

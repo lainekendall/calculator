@@ -29,10 +29,10 @@ spec =
       it "fails on chars" $ isLeft $ runParser parseOp "c12"
       it "fails on spaces" $ isLeft $ runParser parseOp "  "
       it "fails if anything before" $ isLeft $ runParser parseOp "  12 - 4 "
-      it "parses +" $ runParser parseOp "   + " == Right (Add)
-      it "parses -" $ runParser parseOp "   -  " == Right (Subtract)
-      it "parses *" $ runParser parseOp "   *   " == Right (Multiply)
-      it "ignores everything after the operator" $ runParser parseOp "-12xxc  " == Right (Subtract)
+      it "parses +" $ runParser parseOp "   + " == Right Add
+      it "parses -" $ runParser parseOp "   -  " == Right Subtract
+      it "parses *" $ runParser parseOp "   *   " == Right Multiply
+      it "ignores everything after the operator" $ runParser parseOp "-12xxc  " == Right Subtract
     describe "parseExpression" $ do
       it "fails on empty" $ isLeft $ runParser parseExpression ""
       it "fails on chars" $ isLeft $ runParser parseExpression "c12  "
