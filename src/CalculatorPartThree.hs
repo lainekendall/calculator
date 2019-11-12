@@ -8,27 +8,29 @@ type Parser = Parsec String ()
 runParser :: Parsec String () a -> String -> Either ParseError a
 runParser p = parse p ""
 
+parseExpression :: Parser AST
+parseExpression = try parseFullExpression <|> parseIntegerOnly
+
 parseFullExpression :: Parser AST
-parseFullExpression = undefined
-
-parseExpression :: Parser Int
-parseExpression = do
-  spaces
+parseFullExpression = do
   i1 <- parseInteger
-  spaces
   op <- parseOp
-  spaces
-  i2 <- 
-  spaces
-  return $ op i1 i2
+  i2 <- parseExpression
+  return $ MkAST op i1 i2
 
-parseInteger :: Parser Int
-parseInteger = fmap read (many digit)
+parseInteger :: Parser AST
+parseInteger = fmap Value (ignoreWhitespace $ fmap read (many1 digit))
 
-parseOp :: Num a => Parser (a -> a -> a)
-parseOp = fmap opToFunc (oneOf "+-*") 
+parseIntegerOnly :: Parser AST
+parseIntegerOnly = parseInteger >>= \i -> eof >> return i -- is there a simpler way to do this?
 
-opToFunc :: Num a => Char -> (a -> a -> a)
-opToFunc '+' = (+)
-opToFunc '-' = (-)
-opToFunc '*' = (*)
+ignoreWhitespace :: Parser a -> Parser a
+ignoreWhitespace = between spaces spaces
+
+parseOp :: Parser Operator
+parseOp = ignoreWhitespace $ fmap opToFunc (oneOf "+-*")
+
+opToFunc :: Char -> Operator
+opToFunc '+' = Add
+opToFunc '-' = Subtract
+opToFunc '*' = Multiply
