@@ -22,6 +22,7 @@ dependencies:
 - base >= 4.7 && < 5
 - containers
 - haskeline
+- parsec
 
 library:
   source-dirs: src
@@ -36,6 +37,7 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - calculator
+    - parsec
 
 tests:
   calculator-hspec-test:

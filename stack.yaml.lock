@@ -11,6 +11,13 @@ packages:
       sha256: 347eac6c8a3c02fc0101444d6526b57b3c27785809149b12f90d8db57c721fea
   original:
     hackage: hlint-test-0.1.0.0
+- completed:
+    hackage: parsec-3.1.14.0@sha256:9f35f3a6ae66c6e1c22a1b84e62731f1501057791ffb2554f710aa08c7a4d651,4211
+    pantry-tree:
+      size: 2574
+      sha256: c3bb3df367c625daf464cb8b2393001890311d395213620b977a811ba22d3a26
+  original:
+    hackage: parsec-3.1.14.0
 snapshots:
 - completed:
     size: 524789
