@@ -40,3 +40,4 @@ spec =
       it "fails on ops" $ isLeft $ runParser parseExpression "   -   "
       it "parses an integer" $ runParser parseExpression "12" == Right (Value 12)
       it "parses a simple expression" $ runParser parseExpression "12 + 10" == Right (MkAST Add (Value 12) (Value 10))
+      it "parses a complex expression" $ runParser parseExpression "   12 + 10   *55-10   +2  " == Right (MkAST Add (Value 12) (MkAST Multiply (Value 10) (MkAST Subtract (Value 55) (MkAST Add (Value 10) (Value 2)))))
