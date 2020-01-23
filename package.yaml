@@ -23,6 +23,8 @@ dependencies:
 - containers
 - haskeline
 - parsec
+- checkers
+- QuickCheck
 
 library:
   source-dirs: src
@@ -38,6 +40,10 @@ executables:
     dependencies:
     - calculator
     - parsec
+    - checkers
+    - containers
+    - QuickCheck
+    - hspec
 
 tests:
   calculator-hspec-test:

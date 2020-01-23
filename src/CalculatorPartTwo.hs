@@ -6,9 +6,9 @@ import Control.Applicative ((<|>))
 import Data.Char
 import Data.List
 import qualified Data.Map as Map
-import ParserModel
-import ParserCombinators
 import Evaluator
+import ParserCombinators
+import ParserModel
 
 parseExpression :: Parser AST
 parseExpression = parseFullValue <|> parseFullExpression
@@ -23,13 +23,12 @@ parseFullExpression = do
   fmap (MkAST op v) parseExpression
 
 operatorsMap :: Map.Map Char Operator
-operatorsMap = Map.fromList [('+', Add),
-  ('-', Subtract),
-  ('*', Multiply),
-  ('/', Divide)]
+operatorsMap =
+  Map.fromList [('+', Add), ('-', Subtract), ('*', Multiply), ('/', Divide)]
 
 parseValue :: Parser AST
 parseValue = ignoreWhitespace $ fmap Value parseNumber
 
 parseOperator :: Parser Operator
-parseOperator = ignoreWhitespace $ unwrapMaybe $ fmap (`Map.lookup` operatorsMap) parseChar
+parseOperator =
+  ignoreWhitespace $ unwrapMaybe $ fmap (`Map.lookup` operatorsMap) parseChar

@@ -2,7 +2,7 @@
 
 module ParserModel where
 
-import Control.Applicative (Alternative, empty, (<|>))
+import Control.Applicative (Alternative, (<|>), empty)
 
 newtype Parser a =
   Parser

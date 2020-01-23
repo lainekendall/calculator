@@ -17,7 +17,7 @@ parseNumber :: Parser Integer
 parseNumber = fmap read $ some $ satisfy isDigit
 
 parseSpace :: Parser String
-parseSpace = many $ satisfy isSpace 
+parseSpace = many $ satisfy isSpace
 
 -- Parser Combinators
 -- https://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Applicative.html#t:Alternative
@@ -31,7 +31,7 @@ some f = do
   return $ x : xs
 
 char :: Char -> Parser Char
-char c = satisfy (==c)
+char c = satisfy (== c)
 
 string :: String -> Parser String
 string "" = return ""
@@ -42,19 +42,22 @@ string (c:cs) = do
 
 -- http://dev.stephendiehl.com/fun/002_parsers.html
 -- https://hackage.haskell.org/package/base-4.12.0.0/docs/Text-ParserCombinators-ReadP.html#v:satisfy
-satisfy ::  (Char -> Bool) -> Parser Char
-satisfy f = parseChar >>= \c -> if f c
-                                then return c
-                                else Parser $ const Nothing
+satisfy :: (Char -> Bool) -> Parser Char
+satisfy f =
+  parseChar >>= \c ->
+    if f c
+      then return c
+      else Parser $ const Nothing
 
 choice :: [Parser a] -> Parser a
 choice [pa] = pa
 choice (pa:pas) = pa <|> choice pas
 
 unwrapMaybe :: Parser (Maybe a) -> Parser a
-unwrapMaybe p = p >>= \case
-                       Nothing -> Parser $ const Nothing
-                       Just op -> return op
+unwrapMaybe p =
+  p >>= \case
+    Nothing -> Parser $ const Nothing
+    Just op -> return op
 
 ignoreWhitespace :: Parser a -> Parser a
 ignoreWhitespace p = parseSpace >> p >>= \v -> parseSpace >> return v
