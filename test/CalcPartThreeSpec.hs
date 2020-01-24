@@ -32,16 +32,15 @@ spec =
     describe "parseExpression" $ do
       it "Empty" $ isNothing $ runParser parseExpression ""
       it "space" $ isNothing $ runParser parseExpression " "
-      it "parses a value of an incomplete expr" $
-        runParser parseExpression "1 +   " == Just (Value 1, " +   ")
+      it "parses a value of an incomplete expr" $ isNothing $ runParser parseExpression "1 +   "
       it "trims all excess white space" $
         runParser parseExpression "   1   -  2    " ==
         Just (MkAST Subtract (Value 1) (Value 2), "")
       it "parses multiple expressions" $
-        runParser parseExpression "1 + 2 * 10 / 7" ==
+        runParser parseExpression "1 + 2 * 10 - 7" ==
         Just
           ( MkAST
               Add
               (Value 1)
-              (MkAST Multiply (Value 2) (MkAST Divide (Value 10) (Value 7)))
+              (MkAST Multiply (Value 2) (MkAST Subtract (Value 10) (Value 7)))
           , "")

@@ -6,7 +6,7 @@ import ParserCombinators
 import ParserModel
 
 parseExpression :: Parser AST
-parseExpression = try parseFullExpression <|> parseValueOnly
+parseExpression = parseFullExpression <|> parseValueOnly
 
 parseFullExpression :: Parser AST
 parseFullExpression = do

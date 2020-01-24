@@ -77,12 +77,5 @@ between :: Parser a -> Parser a -> Parser b -> Parser b
 between pOpen pClose p = pOpen >>= \x -> p >>= \y -> pClose >>= \z -> return y
 
 oneOf :: String -> Parser Char
-oneOf "" = Parser (\s -> Nothing)
+oneOf "" = Parser $ const Nothing
 oneOf (c:cs) = choice (char c : [oneOf cs])
-
-try :: Parser a -> Parser a
-try (Parser f) = Parser g
-  where
-    g s =
-      case g s of
-        Nothing -> Nothing
