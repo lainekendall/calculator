@@ -14,12 +14,12 @@ The first version of the calculator is as simple a parser that I could make. It 
 Calculator Part Two simplifies Part One by using the `Parser`'s `Functor` instance and `fmap`ing over functions. By allowing ourselves to use the more complicated concept of `Functor` we save complexity and code. Instead of clunkily case matching each operator character, we can `fmap` over a list of these operators and the parser function.
 
 ### Calculator Part Three
-The final version of the calculator introduces a concept that is fundamental to parsing in Haskell: Parser combinators. Parser combinators are why parsing in Haskell is so easy. The concept is that you can combine two simple parsers to make a more complicated parser. The [Parser Combinators](https://hackage.haskell.org/package/parser-combinators-1.2.1/docs/Control-Applicative-Combinators.html) defined 
+The final version of the calculator introduces a concept that is fundamental to parsing in Haskell: Parser combinators. Parser combinators are why parsing in Haskell is so easy. The concept is that you can combine two simple parsers to make a more complicated parser. The parser combinators defined in my calculator are based on concepts in the [Parser Combinators package](https://hackage.haskell.org/package/parser-combinators-1.2.1/docs/Control-Applicative-Combinators.html). 
 
 ## Developing
 
 ##### Set Up
-1. Download Stack
+1. Download [Stack](https://docs.haskellstack.org/en/stable/README/)
 1. Build the Calculator for the first time with `stack build`
 
 ##### Running
