@@ -1,6 +1,7 @@
 module Main where
 
 import qualified CalculatorPartOne as One
+import qualified CalculatorPartThree as Three
 import qualified CalculatorPartTwo as Two
 import Control.Monad (forever)
 import Evaluator
@@ -10,7 +11,8 @@ import System.IO (BufferMode(NoBuffering), hSetBuffering, stdout)
 main :: IO ()
 main = do
   hSetBuffering stdout NoBuffering
-  putStrLn "Welcome to the Calculator! Which version do you want to try (1/2?)..."
+  putStrLn
+    "Welcome to the Calculator! Which version do you want to try (1/2/3?)..."
   version <- getLine
   let parser = getParser version
   forever $ do
@@ -21,4 +23,5 @@ main = do
 getParser :: String -> Parser AST
 getParser "1" = One.parseExpression
 getParser "2" = Two.parseExpression
+getParser "3" = Three.parseExpression
 getParser _ = error "Incorrect version"

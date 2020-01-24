@@ -1,33 +1,27 @@
 module CalculatorPartThree where
 
+import Control.Applicative
 import Evaluator
-import Text.Parsec
-
-type Parser = Parsec String ()
-
-runParser :: Parsec String () a -> String -> Either ParseError a
-runParser p = parse p ""
+import ParserCombinators
+import ParserModel
 
 parseExpression :: Parser AST
-parseExpression = try parseFullExpression <|> parseIntegerOnly
+parseExpression = try parseFullExpression <|> parseValueOnly
 
 parseFullExpression :: Parser AST
 parseFullExpression = do
-  i1 <- parseInteger
-  op <- parseOp
+  i1 <- parseValue
+  op <- parseOperator
   MkAST op i1 <$> parseExpression
 
-parseInteger :: Parser AST
-parseInteger = fmap Value (ignoreWhitespace $ fmap read (many1 digit))
+parseValue :: Parser AST
+parseValue = fmap Value (ignoreWhitespace parseNumber)
 
-parseIntegerOnly :: Parser AST
-parseIntegerOnly = parseInteger >>= \i -> eof >> return i -- is there a simpler way to do this?
+parseValueOnly :: Parser AST
+parseValueOnly = parseValue >>= \i -> parseEof >> return i -- is there a simpler way to do this?
 
-ignoreWhitespace :: Parser a -> Parser a
-ignoreWhitespace = between spaces spaces
-
-parseOp :: Parser Operator
-parseOp = ignoreWhitespace $ fmap opToFunc (oneOf "+-*")
+parseOperator :: Parser Operator
+parseOperator = ignoreWhitespace $ fmap opToFunc (oneOf "+-*")
 
 opToFunc :: Char -> Operator
 opToFunc '+' = Add

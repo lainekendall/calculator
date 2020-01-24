@@ -7,8 +7,8 @@ import Data.Char
 import Data.List
 import qualified Data.Map as Map
 import Evaluator
-import ParserCombinators
 import ParserModel
+import ParserCombinators
 
 parseExpression :: Parser AST
 parseExpression = parseFullValue <|> parseFullExpression

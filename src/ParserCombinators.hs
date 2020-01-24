@@ -16,8 +16,28 @@ parseChar = Parser f
 parseNumber :: Parser Integer
 parseNumber = fmap read $ some $ satisfy isDigit
 
-parseSpace :: Parser String
-parseSpace = many $ satisfy isSpace
+parseSpaces :: Parser String
+parseSpaces = many $ satisfy isSpace
+
+parseEof :: Parser ()
+parseEof = Parser f
+  where
+    f "" = Just ((), "")
+    f s = Nothing
+
+parseSpace :: Parser ()
+parseSpace = Parser f
+      where
+        f s = Just ((), dropWhile isSpace s)
+
+ignoreWhitespace :: Parser a -> Parser a
+ignoreWhitespace = between parseSpaces parseSpaces
+
+unwrapMaybe :: Parser (Maybe a) -> Parser a
+unwrapMaybe p =
+  p >>= \case
+    Nothing -> Parser $ const Nothing
+    Just op -> return op
 
 -- Parser Combinators
 -- https://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Applicative.html#t:Alternative
@@ -53,17 +73,16 @@ choice :: [Parser a] -> Parser a
 choice [pa] = pa
 choice (pa:pas) = pa <|> choice pas
 
-unwrapMaybe :: Parser (Maybe a) -> Parser a
-unwrapMaybe p =
-  p >>= \case
-    Nothing -> Parser $ const Nothing
-    Just op -> return op
+between :: Parser a -> Parser a -> Parser b -> Parser b
+between pOpen pClose p = pOpen >>= \x -> p >>= \y -> pClose >>= \z -> return y
 
-ignoreWhitespace :: Parser a -> Parser a
-ignoreWhitespace p = parseSpace >> p >>= \v -> parseSpace >> return v
+oneOf :: String -> Parser Char
+oneOf "" = Parser (\s -> Nothing)
+oneOf (c:cs) = choice (char c : [oneOf cs])
 
-parseEof :: Parser ()
-parseEof = Parser f
+try :: Parser a -> Parser a
+try (Parser f) = Parser g
   where
-    f "" = Just ((), "")
-    f s = Nothing
+    g s =
+      case g s of
+        Nothing -> Nothing
